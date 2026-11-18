@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palmshade Heat — an original open-world crime game</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js" } }
+</script>
+</head>
+<body>
+<div id="game"></div>
+<div id="damageflash"></div>
+<div id="crosshair"></div>
+
+<div id="hud">
+  <div id="objective" class="panel">
+    <div id="obj-title">Welcome to Palmshade</div>
+    <div id="obj-detail">Rosa is waiting at the Coral Spoon diner.</div>
+    <div id="obj-row"><span id="obj-dist"></span><span id="obj-timer"></span></div>
+  </div>
+
+  <div id="status" class="panel">
+    <div id="cash">$40</div>
+    <div id="stars">☆☆☆☆☆</div>
+    <div id="healthbar"><div id="healthfill"></div></div>
+    <div id="ammo">PISTOL · 30</div>
+  </div>
+
+  <div id="mapwrap"><canvas id="minimap" width="176" height="176"></canvas></div>
+
+  <div id="speed" class="panel"><span id="speedval"></span><div id="carname"></div></div>
+
+  <div id="toast"><div id="toast-title"></div><div id="toast-body"></div></div>
+  <div id="hint"></div>
+  <div id="busted"><div id="busted-label">BUSTED</div><div id="bustedbar"><div id="bustedfill"></div></div></div>
+</div>
+
+<div id="menu" class="overlay">
+  <div class="menu-card">
+    <h1>PALMSHADE <span>HEAT</span></h1>
+    <p class="subtitle">An original open-world crime story in the city of Palmshade</p>
+    <p id="story-text"></p>
+    <div class="controls">
+      <div><b>W A S D</b> move / drive</div>
+      <div><b>Mouse</b> look — click the game to capture it</div>
+      <div><b>Shift</b> sprint / boost</div>
+      <div><b>E</b> enter or leave a car</div>
+      <div><b>Left mouse</b> fire pistol</div>
+      <div><b>Q</b> punch</div>
+      <div><b>Space</b> handbrake</div>
+      <div><b>P</b> pause · <b>M</b> sound on/off</div>
+    </div>
+    <button id="btn-continue" class="btn primary" style="display:none">Continue — back to Palmshade</button>
+    <button id="btn-new" class="btn">New game — meet Rosa</button>
+    <p class="fineprint">A city to explore on foot and by car · traffic and pedestrians · cars to steal ·
+      a wanted level and the Palmshade PD · five story missions, then open errands · progress saves in your browser</p>
+  </div>
+</div>
+
+<div id="pause" class="overlay">
+  <div class="menu-card small">
+    <h2>Paused</h2>
+    <p>Dario catches his breath. Palmshade waits for no one else.</p>
+    <button id="btn-resume" class="btn primary">Back to the streets</button>
+  </div>
+</div>
+
+<div id="busted-screen" class="overlay">
+  <div class="menu-card small">
+    <h2 class="bad">BUSTED</h2>
+    <p>The Palmshade PD walks Dario out of the station with lighter pockets and a long look.</p>
+    <button id="btn-respawn-b" class="btn primary">Walk out (fine up to $150)</button>
+  </div>
+</div>
+
+<div id="wasted-screen" class="overlay">
+  <div class="menu-card small">
+    <h2 class="bad">WASTED</h2>
+    <p>Dario wakes up outside Palmshade General. The city kept his money's worth of bandages: 10%.</p>
+    <button id="btn-respawn-w" class="btn primary">Get up</button>
+  </div>
+</div>
+
+<div id="storyend" class="overlay">
+  <div class="menu-card small">
+    <h2>Story complete</h2>
+    <p>Rosa made the ferry. Dario Marek is a Palmshade name again — the city is open:
+      delivery errands pay by the mile, and the PD has a long memory.</p>
+    <button id="btn-roam" class="btn primary">Free roam Palmshade</button>
+  </div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

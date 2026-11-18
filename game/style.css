@@ -1,0 +1,69 @@
+/* Palmshade Heat — dusk-toned HUD and menus over the 3D city. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1210; }
+body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: #f5ead9; }
+#game, #game canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+#damageflash { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(200, 30, 20, 0.55)); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 5; }
+#crosshair { position: fixed; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); box-shadow: 0 0 4px rgba(0,0,0,0.8); z-index: 4; pointer-events: none; display: none; }
+body.playing #crosshair { display: block; }
+
+/* ---------- HUD ---------- */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 6; opacity: 0; transition: opacity 0.4s; }
+#hud.show { opacity: 1; }
+.panel { background: rgba(16, 14, 18, 0.78); border: 1px solid rgba(255, 195, 110, 0.35); border-radius: 10px; padding: 10px 14px; }
+
+#objective { position: absolute; top: 16px; left: 16px; max-width: 330px; }
+#obj-title { font-size: 17px; font-weight: 700; letter-spacing: 0.04em; color: #ffc93c; text-transform: uppercase; }
+#obj-detail { font-size: 13.5px; line-height: 1.35; margin-top: 3px; color: #f5ead9; }
+#obj-row { display: flex; justify-content: space-between; margin-top: 5px; font-size: 12.5px; }
+#obj-dist { color: #9fd8e8; font-weight: 600; }
+#obj-timer { color: #ffc93c; font-weight: 700; }
+#obj-timer.urgent { color: #ff5a4a; animation: blink 0.5s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+
+#status { position: absolute; top: 16px; right: 16px; text-align: right; min-width: 170px; }
+#cash { font-size: 26px; font-weight: 800; color: #7dff9a; letter-spacing: 0.02em; }
+#stars { font-size: 21px; letter-spacing: 0.18em; color: #5a5f6a; line-height: 1.1; }
+#stars.hot { color: #ffc93c; text-shadow: 0 0 8px rgba(255, 160, 40, 0.7); }
+#healthbar { height: 9px; background: rgba(255,255,255,0.14); border-radius: 5px; margin: 7px 0 5px; overflow: hidden; }
+#healthfill { height: 100%; width: 100%; background: linear-gradient(90deg, #d23b2e, #e88c3a); border-radius: 5px; transition: width 0.2s; }
+#ammo { font-size: 12.5px; letter-spacing: 0.14em; color: #d8cfc0; font-weight: 600; }
+
+#mapwrap { position: absolute; left: 16px; bottom: 16px; width: 176px; height: 176px; border-radius: 50%; box-shadow: 0 4px 18px rgba(0,0,0,0.55); }
+#minimap { display: block; }
+
+#speed { position: absolute; right: 16px; bottom: 16px; text-align: right; display: none; }
+#speedval { font-size: 30px; font-weight: 800; color: #fff; }
+#carname { font-size: 12.5px; letter-spacing: 0.12em; color: #ffc93c; text-transform: uppercase; font-weight: 700; }
+
+#toast { position: absolute; top: 84px; left: 50%; transform: translate(-50%, -12px); max-width: 520px; text-align: center; background: rgba(16, 14, 18, 0.78); border: 1px solid rgba(255, 201, 60, 0.55); border-radius: 12px; padding: 12px 22px; opacity: 0; transition: all 0.3s; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast-title { font-size: 17px; font-weight: 800; color: #ffc93c; text-transform: uppercase; letter-spacing: 0.05em; }
+#toast-body { font-size: 14px; margin-top: 3px; line-height: 1.4; }
+
+#hint { position: absolute; bottom: 108px; left: 50%; transform: translateX(-50%); background: rgba(16, 14, 18, 0.72); border-radius: 8px; padding: 7px 16px; font-size: 14px; opacity: 0; transition: opacity 0.25s; white-space: nowrap; }
+#hint.show { opacity: 1; }
+
+#busted { position: absolute; top: 38%; left: 50%; transform: translateX(-50%); width: 300px; text-align: center; display: none; }
+#busted-label { font-size: 30px; font-weight: 900; letter-spacing: 0.3em; color: #ff5a4a; text-shadow: 0 2px 12px rgba(0,0,0,0.8); }
+#bustedbar { height: 10px; background: rgba(255,255,255,0.2); border-radius: 5px; overflow: hidden; margin-top: 6px; }
+#bustedfill { height: 100%; width: 0%; background: #ff5a4a; }
+
+/* ---------- Overlays ---------- */
+.overlay { position: fixed; inset: 0; z-index: 10; display: none; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(24, 12, 8, 0.55), rgba(10, 8, 14, 0.78)); }
+.overlay.show { display: flex; }
+.menu-card { max-width: 620px; width: calc(100% - 48px); background: rgba(18, 14, 16, 0.88); border: 1px solid rgba(255, 195, 110, 0.4); border-radius: 16px; padding: 34px 40px; text-align: center; box-shadow: 0 18px 60px rgba(0,0,0,0.6); }
+.menu-card.small { max-width: 460px; }
+.menu-card h1 { font-size: 52px; font-weight: 900; letter-spacing: 0.06em; line-height: 1; background: linear-gradient(92deg, #ffd76e, #ff8a5c 55%, #ff5c8a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.menu-card h1 span { display: block; font-size: 64px; }
+.menu-card h2 { font-size: 34px; font-weight: 900; letter-spacing: 0.08em; color: #ffc93c; text-transform: uppercase; }
+.menu-card h2.bad { color: #ff5a4a; }
+.subtitle { margin-top: 8px; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: #9fd8e8; }
+#story-text, .menu-card p { margin-top: 14px; font-size: 15px; line-height: 1.55; color: #e8dcc8; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 18px; margin: 20px auto 6px; max-width: 480px; text-align: left; font-size: 13.5px; color: #cfc4ae; }
+.controls b { color: #ffc93c; font-weight: 700; }
+.btn { display: block; width: 100%; margin-top: 12px; padding: 13px 18px; font-size: 16.5px; font-weight: 700; letter-spacing: 0.03em; color: #201408; background: linear-gradient(180deg, #e8e0d0, #cbbfa8); border: none; border-radius: 10px; cursor: pointer; }
+.btn:hover { filter: brightness(1.07); }
+.btn.primary { background: linear-gradient(180deg, #ffd76e, #ff9a3c); }
+.fineprint { font-size: 12px !important; color: #9a8f7a !important; }
